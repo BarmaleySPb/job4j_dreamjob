@@ -1,6 +1,8 @@
+package dream.model;
+
 public class Candidate extends User {
 
-    Candidate(int id, String name) {
+    public Candidate(int id, String name) {
         super(id, name);
     }
 

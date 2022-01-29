@@ -1,10 +1,12 @@
+package dream.model;
+
 import java.util.Objects;
 
 public abstract class User {
     int id;
     String name;
 
-    User(int id, String name) {
+    public User(int id, String name) {
         this.id = id;
         this.name = name;
     }
@@ -44,7 +46,7 @@ public abstract class User {
 
     @Override
     public String toString() {
-        return "User{"
+        return "dream.model.User{"
                 + "id=" + id
                 + ", name='" + name + '\''
                 + '}';
