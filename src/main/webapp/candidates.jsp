@@ -3,6 +3,7 @@
 <%@ page import="dream.model.Candidate" %>
 <%@ page import="java.util.Collection" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core" %>
+<%@ taglib prefix="с" uri="http://java.sun.com/jsp/jstl/core" %>
 <!doctype html>
 <html lang="en">
 <head>
@@ -36,7 +37,10 @@
                     <thead>
                     <tr>
                         <th scope="col">Названия</th>
+                        <th scope="col">Добавить/Удалить</th>
+                        <th scope="col">Фото</th>
                     </tr>
+
                     </thead>
                     <tbody>
                     <c:forEach items="${candidates}" var="candidate">
@@ -46,6 +50,20 @@
                                     <i class="fa fa-edit mr-3"></i>
                                 </a>
                                 <c:out value="${candidate.name}"/>
+
+                            <td>
+                                <form action="<с:url value='/upload'/>" method="post" enctype="multipart/form-data">
+                                    <div class="checkbox">
+                                        <input type="file" name="file">
+                                    </div>
+                                    <button type="submit" class="btn btn-default">Submit</button>
+                                </form>
+                            </td>
+
+                            <td>
+                                <img src="<c:url value='/download?name=${candidate.id}'/>" width="100px" height="100px"/>
+                            </td>
+
                             </td>
                         </tr>
                     </c:forEach>
