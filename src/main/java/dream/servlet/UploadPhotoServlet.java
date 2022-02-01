@@ -1,13 +1,10 @@
 package dream.servlet;
 
-import dream.model.Candidate;
-import dream.store.Store;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -23,11 +20,40 @@ import java.util.List;
 public class UploadPhotoServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
+        List<String> images = new ArrayList<>();
+        for (File name : new File("c:\\images\\").listFiles()) {
+            images.add(name.getName());
+        }
+        req.setAttribute("images", images);
+        resp.sendRedirect(req.getContextPath() + "/candidates.do");
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
+        req.setCharacterEncoding("UTF-8");
+        DiskFileItemFactory factory = new DiskFileItemFactory();
+        ServletContext servletContext = this.getServletConfig().getServletContext();
+        File repository = (File) servletContext.getAttribute("javax.servlet.context.tempdir");
+        factory.setRepository(repository);
+        ServletFileUpload upload = new ServletFileUpload(factory);
+        String id = req.getParameter("id");
+        try {
+            List<FileItem> items = upload.parseRequest(req);
+            File folder = new File("c:\\images\\");
+            if (!folder.exists()) {
+                folder.mkdir();
+            }
+            for (FileItem item : items) {
+                if (!item.isFormField()) {
+                    File file = new File(folder + File.separator + id);
+                    try (FileOutputStream out = new FileOutputStream(file)) {
+                        out.write(item.getInputStream().readAllBytes());
+                    }
+                }
+            }
+        } catch (FileUploadException e) {
+            e.printStackTrace();
+        }
+        doGet(req, resp);
     }
 }

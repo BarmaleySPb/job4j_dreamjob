@@ -26,7 +26,6 @@
 </head>
 <body>
 <div class="container pt-3">
-
     <div class="row">
         <div class="card" style="width: 100%">
             <div class="card-header">
@@ -37,10 +36,10 @@
                     <thead>
                     <tr>
                         <th scope="col">Названия</th>
-                        <th scope="col">Добавить/Удалить</th>
+                        <th scope="col">Добавить/Удалить фото</th>
+
                         <th scope="col">Фото</th>
                     </tr>
-
                     </thead>
                     <tbody>
                     <c:forEach items="${candidates}" var="candidate">
@@ -50,20 +49,17 @@
                                     <i class="fa fa-edit mr-3"></i>
                                 </a>
                                 <c:out value="${candidate.name}"/>
-
-                            <td>
-                                <form action="<с:url value='/upload'/>" method="post" enctype="multipart/form-data">
-                                    <div class="checkbox">
-                                        <input type="file" name="file">
-                                    </div>
-                                    <button type="submit" class="btn btn-default">Submit</button>
-                                </form>
                             </td>
-
+                            <td>
+                                <a href='<c:url value="/uploadphoto.jsp?id=${candidate.id}"/>'>
+                                    <button type="submit" class="btn btn-success">Добавить фото</button>
+                                </a>
+                                <a href='<c:url value="/deletecandidate?id=${candidate.id}"/>'>
+                                    <button type="submit" class="btn btn-danger">Удалить</button>
+                                </a>
+                            </td>
                             <td>
                                 <img src="<c:url value='/download?name=${candidate.id}'/>" width="100px" height="100px"/>
-                            </td>
-
                             </td>
                         </tr>
                     </c:forEach>

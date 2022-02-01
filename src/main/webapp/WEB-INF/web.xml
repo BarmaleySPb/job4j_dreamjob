@@ -29,7 +29,15 @@
     <servlet-name>UploadPhotoServlet</servlet-name>
     <servlet-class>dream.servlet.UploadPhotoServlet</servlet-class>
   </servlet>
+  <servlet>
+    <servlet-name>DeleteCandidate</servlet-name>
+    <servlet-class>dream.servlet.DeleteCandidate</servlet-class>
+  </servlet>
 
+  <servlet-mapping>
+    <servlet-name>DeleteCandidate</servlet-name>
+    <url-pattern>/deletecandidate</url-pattern>
+  </servlet-mapping>
   <servlet-mapping>
     <servlet-name>UploadPhotoServlet</servlet-name>
     <url-pattern>/uploadphoto</url-pattern>
@@ -38,7 +46,6 @@
     <servlet-name>UploadServlet</servlet-name>
     <url-pattern>/upload</url-pattern>
   </servlet-mapping>
-
   <servlet-mapping>
     <servlet-name>DownloadServlet</servlet-name>
     <url-pattern>/download</url-pattern>
