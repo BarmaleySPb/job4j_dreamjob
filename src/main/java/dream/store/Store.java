@@ -1,5 +1,6 @@
 package dream.store;
 
+import dream.utils.GetProperties;
 import dream.model.Candidate;
 import dream.model.Post;
 
@@ -15,6 +16,9 @@ public class Store {
     private final Map<Integer, Candidate> candidates = new ConcurrentHashMap<>();
     private final static AtomicInteger POST_ID = new AtomicInteger(3);
     private final static AtomicInteger CANDIDATE_ID = new AtomicInteger(3);
+    private final static String PHOTO_STORE = GetProperties.config(
+            "store.properties").getProperty("photostore"
+    );
 
     private Store() {
         posts.put(1, new Post(1, "Junior Java Job"));
@@ -61,5 +65,9 @@ public class Store {
 
     public void deleteCandidate(int id) {
         candidates.remove(id);
+    }
+
+    public static String getPhotoStore() {
+        return PHOTO_STORE;
     }
 }
