@@ -1,6 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
 <%@ page import="dream.store.MemStore" %>
 <%@ page import="dream.model.Post" %>
+<%@ page import="dream.store.DbStore" %>
 <!doctype html>
 <html lang="en">
 <head>
@@ -25,7 +26,7 @@
     String id = request.getParameter("id");
     Post post = new Post(0, "");
     if (id != null) {
-        post = MemStore.instOf().findPostById(Integer.parseInt(id));
+        post = DbStore.instOf().findPostById(Integer.parseInt(id));
     }
 %>
 <div class="container pt-3">

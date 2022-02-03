@@ -1,5 +1,6 @@
 package dream.servlet;
 
+import dream.store.DbStore;
 import dream.store.MemStore;
 import dream.utils.GetProperties;
 
@@ -15,7 +16,7 @@ public class DeleteCandidate extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String fileName = req.getParameter("id");
-        MemStore.instOf().deleteCandidate(Integer.parseInt(fileName));
+        DbStore.instOf().deleteCandidate(Integer.parseInt(fileName));
         File file = new File(
                 GetProperties.config("store.properties").getProperty("photostore")
                         + File.separator + fileName
