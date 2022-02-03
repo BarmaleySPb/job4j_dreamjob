@@ -1,6 +1,7 @@
 package dream.servlet;
 
-import dream.store.Store;
+import dream.store.MemStore;
+import dream.utils.GetProperties;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
@@ -19,15 +20,6 @@ import java.util.List;
 
 
 public class UploadPhotoServlet extends HttpServlet {
-    @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        List<String> images = new ArrayList<>();
-        for (File name : new File(Store.getPhotoStore()).listFiles()) {
-            images.add(name.getName());
-        }
-        req.setAttribute("images", images);
-        resp.sendRedirect(req.getContextPath() + "/candidates.do");
-    }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -40,7 +32,9 @@ public class UploadPhotoServlet extends HttpServlet {
         String id = req.getParameter("id");
         try {
             List<FileItem> items = upload.parseRequest(req);
-            File folder = new File(Store.getPhotoStore());
+            File folder = new File(
+                    String.valueOf(GetProperties.config("store.properties").getProperty("photostore"))
+            );
             if (!folder.exists()) {
                 folder.mkdir();
             }
@@ -55,6 +49,6 @@ public class UploadPhotoServlet extends HttpServlet {
         } catch (FileUploadException e) {
             e.printStackTrace();
         }
-        doGet(req, resp);
+        resp.sendRedirect(req.getContextPath() + "/candidates.do");
     }
 }

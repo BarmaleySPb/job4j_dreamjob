@@ -22,10 +22,6 @@
     <servlet-class>dream.servlet.DownloadServlet</servlet-class>
   </servlet>
   <servlet>
-    <servlet-name>UploadServlet</servlet-name>
-    <servlet-class>dream.servlet.UploadServlet</servlet-class>
-  </servlet>
-  <servlet>
     <servlet-name>UploadPhotoServlet</servlet-name>
     <servlet-class>dream.servlet.UploadPhotoServlet</servlet-class>
   </servlet>
@@ -41,10 +37,6 @@
   <servlet-mapping>
     <servlet-name>UploadPhotoServlet</servlet-name>
     <url-pattern>/uploadphoto</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>UploadServlet</servlet-name>
-    <url-pattern>/upload</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
     <servlet-name>DownloadServlet</servlet-name>

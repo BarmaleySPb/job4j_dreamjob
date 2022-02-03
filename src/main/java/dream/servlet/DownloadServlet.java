@@ -1,6 +1,6 @@
 package dream.servlet;
 
-import dream.store.Store;
+import dream.utils.GetProperties;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -15,8 +15,9 @@ public class DownloadServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String name = req.getParameter("name");
+        String photostore = String.valueOf(GetProperties.config("store.properties").getProperty("photostore"));
         File downloadFile = null;
-        for (File file : new File(Store.getPhotoStore()).listFiles()) {
+        for (File file : new File(photostore).listFiles()) {
             if (name.equals(file.getName())) {
                 downloadFile = file;
                 break;
