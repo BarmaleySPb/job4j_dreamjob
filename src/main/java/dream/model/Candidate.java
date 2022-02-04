@@ -1,5 +1,6 @@
 package dream.model;
 
+
 public class Candidate extends User {
 
     public Candidate(int id, String name) {

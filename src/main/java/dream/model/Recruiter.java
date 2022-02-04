@@ -1,5 +1,6 @@
 package dream.model;
 
+
 public class Recruiter extends User {
 
     public Recruiter(int id, String name) {
