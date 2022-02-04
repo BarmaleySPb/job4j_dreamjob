@@ -1,10 +1,13 @@
 package dream.model;
 
 
-public class Recruiter extends User {
+public class Recruiter {
+    int id;
+    String name;
 
     public Recruiter(int id, String name) {
-        super(id, name);
+        this.id = id;
+        this.name = name;
     }
 
     public void postVacation() {
