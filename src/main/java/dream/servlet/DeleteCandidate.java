@@ -1,7 +1,6 @@
 package dream.servlet;
 
 import dream.store.DbStore;
-import dream.store.MemStore;
 import dream.utils.GetProperties;
 
 import javax.servlet.ServletException;

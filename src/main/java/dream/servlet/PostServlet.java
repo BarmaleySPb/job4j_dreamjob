@@ -2,7 +2,6 @@ package dream.servlet;
 
 import dream.model.Post;
 import dream.store.DbStore;
-import dream.store.MemStore;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;

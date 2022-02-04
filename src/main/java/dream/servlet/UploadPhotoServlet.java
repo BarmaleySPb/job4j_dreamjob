@@ -1,11 +1,14 @@
 package dream.servlet;
 
+import dream.store.DbStore;
 import dream.store.MemStore;
 import dream.utils.GetProperties;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -15,11 +18,11 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 
 public class UploadPhotoServlet extends HttpServlet {
+    private static final Logger LOG = LoggerFactory.getLogger(DbStore.class.getName());
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -47,7 +50,7 @@ public class UploadPhotoServlet extends HttpServlet {
                 }
             }
         } catch (FileUploadException e) {
-            e.printStackTrace();
+            LOG.error("Photo not uploaded.", e);
         }
         resp.sendRedirect(req.getContextPath() + "/candidates.do");
     }

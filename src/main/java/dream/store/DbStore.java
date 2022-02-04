@@ -4,6 +4,8 @@ import dream.utils.GetProperties;
 import org.apache.commons.dbcp2.BasicDataSource;
 import dream.model.Candidate;
 import dream.model.Post;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -15,15 +17,16 @@ import java.util.Properties;
 
 
 public class DbStore implements Store {
-    private static final DbStore instance = new DbStore();
+    private static final DbStore INSTANCE = new DbStore();
     private final BasicDataSource pool = new BasicDataSource();
+    private static final Logger LOG = LoggerFactory.getLogger(DbStore.class.getName());
 
     private DbStore() {
         Properties cfg = GetProperties.config("db.properties");
         try {
             Class.forName(cfg.getProperty("jdbc.driver"));
         } catch (Exception e) {
-            throw new IllegalStateException(e);
+            LOG.error("Driver not loaded", e);
         }
         pool.setDriverClassName(cfg.getProperty("jdbc.driver"));
         pool.setUrl(cfg.getProperty("jdbc.url"));
@@ -53,7 +56,7 @@ public class DbStore implements Store {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            LOG.error("Connection to DB not established", e);
         }
         return posts;
     }
@@ -69,7 +72,7 @@ public class DbStore implements Store {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            LOG.error("Connection to DB not established", e);
         }
         return candidates;
     }
@@ -103,7 +106,7 @@ public class DbStore implements Store {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            LOG.error("Connection to DB not established", e);
         }
         return post;
     }
@@ -121,7 +124,7 @@ public class DbStore implements Store {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            LOG.error("Connection to DB not established", e);
         }
         return candidate;
     }
@@ -136,7 +139,7 @@ public class DbStore implements Store {
             ps.setInt(3, post.getId());
             ps.executeUpdate();
         } catch (Exception e) {
-            e.printStackTrace();
+            LOG.error("Connection to DB not established", e);
         }
     }
 
@@ -149,7 +152,7 @@ public class DbStore implements Store {
             ps.setInt(2, candidate.getId());
             ps.executeUpdate();
         } catch (Exception e) {
-            e.printStackTrace();
+            LOG.error("Connection to DB not established", e);
         }
     }
 
@@ -164,7 +167,7 @@ public class DbStore implements Store {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            LOG.error("Connection to DB not established", e);
         }
         return null;
     }
@@ -180,7 +183,7 @@ public class DbStore implements Store {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            LOG.error("Connection to DB not established", e);
         }
         return null;
     }
@@ -193,7 +196,7 @@ public class DbStore implements Store {
             ps.setInt(1, id);
             ps.executeUpdate();
         } catch (Exception e) {
-            e.printStackTrace();
+            LOG.error("Connection to DB not established", e);
         }
     }
 
@@ -205,7 +208,7 @@ public class DbStore implements Store {
             ps.setInt(1, id);
             ps.executeUpdate();
         } catch (Exception e) {
-            e.printStackTrace();
+            LOG.error("Connection to DB not established", e);
         }
     }
 }
