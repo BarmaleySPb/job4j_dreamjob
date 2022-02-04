@@ -1,5 +1,6 @@
 package dream.store;
 
+import dream.model.User;
 import dream.utils.GetProperties;
 import org.apache.commons.dbcp2.BasicDataSource;
 import dream.model.Candidate;
@@ -93,6 +94,35 @@ public class DbStore implements Store {
         }
     }
 
+    public void save(User user) {
+        if (user.getId() == 0) {
+            create(user);
+        } else {
+            update(user);
+        }
+    }
+
+    public User create(User user) {
+        try (Connection cn = pool.getConnection();
+             PreparedStatement ps = cn.prepareStatement(
+                     "INSERT INTO user(name, email, password) VALUES (?,?,?)",
+                     PreparedStatement.RETURN_GENERATED_KEYS)
+        ) {
+            ps.setString(1, user.getName());
+            ps.setString(2, user.getEmail());
+            ps.setString(3, user.getPassword());
+            ps.execute();
+            try (ResultSet id = ps.getGeneratedKeys()) {
+                if (id.next()) {
+                    user.setId(id.getInt(1));
+                }
+            }
+        } catch (Exception e) {
+            LOG.error("Connection to DB not established", e);
+        }
+        return user;
+    }
+
     private Post create(Post post) {
         try (Connection cn = pool.getConnection();
              PreparedStatement ps =  cn.prepareStatement("INSERT INTO post(name) VALUES (?)",
@@ -156,6 +186,21 @@ public class DbStore implements Store {
         }
     }
 
+    private void update(User user) {
+        try (Connection cn = pool.getConnection();
+             PreparedStatement ps = cn.prepareStatement(
+                     "UPDATE user SET name = (?), email = (?), password = (?) WHERE id = (?)")
+        ) {
+            ps.setString(1, user.getName());
+            ps.setString(2, user.getEmail());
+            ps.setString(3, user.getPassword());
+            ps.setInt(4, user.getId());
+            ps.executeUpdate();
+        } catch (Exception e) {
+            LOG.error("Connection to DB not established", e);
+        }
+    }
+
     public Post findPostById(int id) {
         try (Connection cn = pool.getConnection();
              PreparedStatement ps =  cn.prepareStatement("SELECT * FROM post WHERE id = ?")
@@ -188,10 +233,27 @@ public class DbStore implements Store {
         return null;
     }
 
+    public User findUserById(int id) {
+        try (Connection cn = pool.getConnection();
+             PreparedStatement ps =  cn.prepareStatement("SELECT * FROM user WHERE id = ?")
+        ) {
+            ps.setInt(1, id);
+            try (ResultSet it = ps.executeQuery()) {
+                if (it.next()) {
+                    return new User(it.getInt("id"), it.getString("name"),
+                            it.getString("email"), it.getString("password"));
+                }
+            }
+        } catch (Exception e) {
+            LOG.error("Connection to DB not established", e);
+        }
+        return null;
+    }
+
     public void deletePost(int id) {
         try (Connection cn = pool.getConnection();
              PreparedStatement ps = cn.prepareStatement(
-                     "DELETE FROM POST WHERE id = (?)")
+                     "DELETE FROM post WHERE id = (?)")
         ) {
             ps.setInt(1, id);
             ps.executeUpdate();
@@ -203,7 +265,19 @@ public class DbStore implements Store {
     public void deleteCandidate(int id) {
         try (Connection cn = pool.getConnection();
              PreparedStatement ps = cn.prepareStatement(
-                     "DELETE FROM CANDIDATE WHERE id = (?)")
+                     "DELETE FROM candidate WHERE id = (?)")
+        ) {
+            ps.setInt(1, id);
+            ps.executeUpdate();
+        } catch (Exception e) {
+            LOG.error("Connection to DB not established", e);
+        }
+    }
+
+    public void deleteUser(int id) {
+        try (Connection cn = pool.getConnection();
+             PreparedStatement ps = cn.prepareStatement(
+                     "DELETE FROM user WHERE id = (?)")
         ) {
             ps.setInt(1, id);
             ps.executeUpdate();
