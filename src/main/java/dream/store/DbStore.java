@@ -105,7 +105,7 @@ public class DbStore implements Store {
     public User create(User user) {
         try (Connection cn = pool.getConnection();
              PreparedStatement ps = cn.prepareStatement(
-                     "INSERT INTO user(name, email, password) VALUES (?,?,?)",
+                     "INSERT INTO users(name, email, password) VALUES (?,?,?)",
                      PreparedStatement.RETURN_GENERATED_KEYS)
         ) {
             ps.setString(1, user.getName());
@@ -189,7 +189,7 @@ public class DbStore implements Store {
     private void update(User user) {
         try (Connection cn = pool.getConnection();
              PreparedStatement ps = cn.prepareStatement(
-                     "UPDATE user SET name = (?), email = (?), password = (?) WHERE id = (?)")
+                     "UPDATE users SET name = (?), email = (?), password = (?) WHERE id = (?)")
         ) {
             ps.setString(1, user.getName());
             ps.setString(2, user.getEmail());
@@ -235,7 +235,7 @@ public class DbStore implements Store {
 
     public User findUserById(int id) {
         try (Connection cn = pool.getConnection();
-             PreparedStatement ps =  cn.prepareStatement("SELECT * FROM user WHERE id = ?")
+             PreparedStatement ps =  cn.prepareStatement("SELECT * FROM users WHERE id = ?")
         ) {
             ps.setInt(1, id);
             try (ResultSet it = ps.executeQuery()) {
@@ -277,7 +277,7 @@ public class DbStore implements Store {
     public void deleteUser(int id) {
         try (Connection cn = pool.getConnection();
              PreparedStatement ps = cn.prepareStatement(
-                     "DELETE FROM user WHERE id = (?)")
+                     "DELETE FROM users WHERE id = (?)")
         ) {
             ps.setInt(1, id);
             ps.executeUpdate();
