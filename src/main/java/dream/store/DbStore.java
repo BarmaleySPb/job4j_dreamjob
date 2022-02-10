@@ -203,12 +203,13 @@ public class DbStore implements Store {
 
     public Post findPostById(int id) {
         try (Connection cn = pool.getConnection();
-             PreparedStatement ps =  cn.prepareStatement("SELECT * FROM post WHERE id = ?")
+             PreparedStatement ps =  cn.prepareStatement("SELECT * FROM post WHERE id = (?)")
         ) {
             ps.setInt(1, id);
             try (ResultSet it = ps.executeQuery()) {
                 if (it.next()) {
-                    return new Post(it.getInt("id"), it.getString("name"), it.getString("description"));
+                    return new Post(it.getInt("id"), it.getString("name"),
+                            it.getString("description"));
                 }
             }
         } catch (Exception e) {
@@ -219,7 +220,7 @@ public class DbStore implements Store {
 
     public Candidate findCandidateById(int id) {
         try (Connection cn = pool.getConnection();
-             PreparedStatement ps =  cn.prepareStatement("SELECT * FROM candidate WHERE id = ?")
+             PreparedStatement ps =  cn.prepareStatement("SELECT * FROM candidate WHERE id = (?)")
         ) {
             ps.setInt(1, id);
             try (ResultSet it = ps.executeQuery()) {
@@ -235,9 +236,26 @@ public class DbStore implements Store {
 
     public User findUserById(int id) {
         try (Connection cn = pool.getConnection();
-             PreparedStatement ps =  cn.prepareStatement("SELECT * FROM users WHERE id = ?")
+             PreparedStatement ps =  cn.prepareStatement("SELECT * FROM users WHERE id = (?)")
         ) {
             ps.setInt(1, id);
+            try (ResultSet it = ps.executeQuery()) {
+                if (it.next()) {
+                    return new User(it.getInt("id"), it.getString("name"),
+                            it.getString("email"), it.getString("password"));
+                }
+            }
+        } catch (Exception e) {
+            LOG.error("Connection to DB not established", e);
+        }
+        return null;
+    }
+
+    public User findUserByEmail(String email) {
+        try (Connection cn = pool.getConnection();
+             PreparedStatement ps =  cn.prepareStatement("SELECT * FROM users WHERE email = (?)")
+        ) {
+            ps.setString(1, email);
             try (ResultSet it = ps.executeQuery()) {
                 if (it.next()) {
                     return new User(it.getInt("id"), it.getString("name"),

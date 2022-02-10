@@ -1,6 +1,7 @@
 package dream.store;
 
 import dream.model.Candidate;
+import dream.model.User;
 import org.junit.Assert;
 import org.junit.Test;
 import dream.model.Post;
@@ -9,6 +10,16 @@ import java.util.List;
 
 
 public class DbStoreTest {
+
+    @Test
+    public void whenCreateUser() {
+        Store store = DbStore.instOf();
+        User user = new User(0, "Vasiliy", "asd@mail.com", "123qwe");
+        store.save(user);
+        User userInDb = store.findUserByEmail(user.getEmail());
+        Assert.assertEquals(userInDb.getName(), user.getName());
+    }
+
     @Test
     public void whenCreatePost() {
         Store store = DbStore.instOf();
