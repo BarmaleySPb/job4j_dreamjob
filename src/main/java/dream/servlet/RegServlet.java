@@ -21,7 +21,10 @@ public class RegServlet extends HttpServlet {
             DbStore.instOf().save(user);
             HttpSession sc = req.getSession();
             sc.setAttribute("user", user);
-            resp.sendRedirect(req.getContextPath() + "/index.do");
+            resp.sendRedirect(req.getContextPath() + "/posts.do");
+        } else {
+            req.setAttribute("error", "Пользователь с таким email уже существует");
+            req.getRequestDispatcher("login.jsp").forward(req, resp);
         }
     }
 }
