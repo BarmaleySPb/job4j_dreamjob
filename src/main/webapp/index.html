@@ -32,6 +32,12 @@
             }
             return true;
         }
+
+        function addRow() {
+            const name = $('#inputName').val();
+
+            $('#table tr:last').after('<tr><td>' + name +'</td></tr>');
+        }
     </script>
 </head>
 <body>
@@ -62,7 +68,8 @@
     </form>
 </div>
 
-<table class="table">
+<div class="container-fluid">
+<table class="table" id="table">
     <thead>
     <tr>
         <th scope="col">#</th>
@@ -72,7 +79,9 @@
         <th scope="col">Description</th>
     </tr>
     </thead>
+    <button type="button" class="btn btn-default" onclick="addRow()">Add row</button>
 </table>
+</div>
 
 </body>
 </html>
