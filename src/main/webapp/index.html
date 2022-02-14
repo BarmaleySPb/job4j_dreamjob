@@ -8,6 +8,9 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script>
+
+        let numberOfRow = 1;
+
         function validate() {
             const name = $('#inputName').val();
             const surname = $('#inputSurname').val();
@@ -35,8 +38,13 @@
 
         function addRow() {
             const name = $('#inputName').val();
+            const surname = $('#inputSurname').val();
+            const gender = $('#inputGender').val();
+            const description = $('#inputDescription').val();
 
-            $('#table tr:last').after('<tr><td>' + name +'</td></tr>');
+            $('#table tr:last').after('<tr><td>' + numberOfRow + '</td><td>' + name + '</td><td>' + surname
+                + '</td><td>' + gender + '</td><td>' + description +'</td></tr>');
+            numberOfRow++;
         }
     </script>
 </head>
