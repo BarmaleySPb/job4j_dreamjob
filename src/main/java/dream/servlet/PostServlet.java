@@ -12,6 +12,7 @@ import java.util.ArrayList;
 
 
 public class PostServlet extends HttpServlet {
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.setAttribute("posts", new ArrayList<>(DbStore.instOf().findAllPosts()));
@@ -25,7 +26,8 @@ public class PostServlet extends HttpServlet {
         DbStore.instOf().save(
                 new Post(
                         Integer.parseInt(req.getParameter("id")),
-                        req.getParameter("name")
+                        req.getParameter("name"),
+                        req.getParameter("description")
                 )
         );
         resp.sendRedirect(req.getContextPath() + "/posts.do");

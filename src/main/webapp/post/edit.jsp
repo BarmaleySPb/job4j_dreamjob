@@ -1,6 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html; charset=UTF-8" %>
-<%@ page import="dream.store.MemStore" %>
 <%@ page import="dream.model.Post" %>
 <%@ page import="dream.store.DbStore" %>
 <!doctype html>
@@ -22,8 +21,24 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
             integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
             crossorigin="anonymous"></script>
+    <script>
+        function validate() {
+            const name = $('#inputTitle').val();
+            const description = $('#inputDescription').val();
 
-    <title>Работа мечты</title>
+            if (name === '') {
+                alert('Please enter job title.');
+                return false;
+            }
+            if (description === '') {
+                alert('Please enter job title.');
+                return false;
+            }
+            return true;
+        }
+    </script>
+
+    <title>Dream job</title>
 </head>
 <body>
 <%
@@ -37,16 +52,16 @@
     <div class="row">
         <ul class="nav">
             <li class="nav-item">
-                <a class="nav-link" href="<%=request.getContextPath()%>/posts.do">Вакансии</a>
+                <a class="nav-link" href="<%=request.getContextPath()%>/posts.do">Vacancies</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="<%=request.getContextPath()%>/candidates.do">Кандидаты</a>
+                <a class="nav-link" href="<%=request.getContextPath()%>/candidates.do">Candidates</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="<%=request.getContextPath()%>/post/edit.jsp">Добавить вакансию</a>
+                <a class="nav-link" href="<%=request.getContextPath()%>/post/edit.jsp">Add vacancy</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="<%=request.getContextPath()%>/candidate/edit.jsp">Добавить кандидата</a>
+                <a class="nav-link" href="<%=request.getContextPath()%>/candidate/edit.jsp">Add candidate</a>
             </li>
         </ul>
     </div>
@@ -55,18 +70,24 @@
             <div class="card" style="width: 100%">
                 <div class="card-header">
                     <% if (id == null) { %>
-                    Новая вакансия.
+                    New vacancy.
                     <% } else { %>
-                    Редактирование вакансии.
+                    Edit vacancy.
                     <% } %>
                 </div>
                 <div class="card-body">
                     <form action="<%=request.getContextPath()%>/posts.do?id=<%=post.getId()%>" method="post">
                         <div class="form-group">
-                            <label>Имя</label>
-                            <input type="text" class="form-control" name="name" value="<%=post.getName()%>">
+                            <label>Job title</label>
+                            <input type="text" class="form-control" name="name" id="inputTitle"
+                                   value="<%=post.getName()%>" placeholder="Enter job title">
                         </div>
-                        <button type="submit" class="btn btn-primary">Сохранить</button>
+                        <div class="form-group">
+                            <label>Description</label>
+                            <input type="text" class="form-control" name="description" id="inputDescription"
+                                   placeholder="Enter description of job">
+                        </div>
+                        <button type="submit" class="btn btn-primary" onclick="return validate();">Save</button>
                     </form>
                 </div>
             </div>

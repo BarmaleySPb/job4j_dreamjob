@@ -1,7 +1,6 @@
 package dream.servlet;
 
 import dream.store.DbStore;
-import dream.store.MemStore;
 import dream.utils.GetProperties;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
@@ -22,6 +21,7 @@ import java.util.List;
 
 
 public class UploadPhotoServlet extends HttpServlet {
+
     private static final Logger LOG = LoggerFactory.getLogger(DbStore.class.getName());
 
     @Override

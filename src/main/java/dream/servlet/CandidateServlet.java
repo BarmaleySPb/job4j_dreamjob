@@ -11,6 +11,7 @@ import java.io.IOException;
 
 
 public class CandidateServlet extends HttpServlet {
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.setAttribute("candidates", DbStore.instOf().findAllCandidates());
@@ -23,7 +24,8 @@ public class CandidateServlet extends HttpServlet {
         DbStore.instOf().save(
                 new Candidate(
                         Integer.parseInt(req.getParameter("id")),
-                        req.getParameter("name")
+                        req.getParameter("name"),
+                        Integer.parseInt(req.getParameter("city"))
                 )
         );
         resp.sendRedirect(req.getContextPath() + "/candidates.do");

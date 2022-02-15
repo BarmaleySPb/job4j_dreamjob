@@ -1,7 +1,4 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
-<%@ page import="dream.store.MemStore" %>
-<%@ page import="dream.model.Candidate" %>
-<%@ page import="java.util.Collection" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core" %>
 <%@ taglib prefix="с" uri="http://java.sun.com/jsp/jstl/core" %>
 <!doctype html>
@@ -32,21 +29,21 @@
     <div class="row">
         <ul class="nav">
             <li class="nav-item">
-                <a class="nav-link" href="<%=request.getContextPath()%>/posts.do">Вакансии</a>
+                <a class="nav-link" href="<%=request.getContextPath()%>/posts.do">Vacancies</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="<%=request.getContextPath()%>/candidates.do">Кандидаты</a>
+                <a class="nav-link" href="<%=request.getContextPath()%>/candidates.do">Candidates</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="<%=request.getContextPath()%>/post/edit.jsp">Добавить вакансию</a>
+                <a class="nav-link" href="<%=request.getContextPath()%>/post/edit.jsp">Add vacancy</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="<%=request.getContextPath()%>/candidate/edit.jsp">Добавить кандидата</a>
+                <a class="nav-link" href="<%=request.getContextPath()%>/candidate/edit.jsp">Add candidate</a>
             </li>
             <c:if test="${user != null}">
                 <li class="nav-item">
                     <a class="nav-link" href="<%=request.getContextPath()%>/logout.do">
-                        <c:out value="${user.name}"/> | Выйти</a>
+                        <c:out value="${user.name}"/> | Log out</a>
                 </li>
             </c:if>
         </ul>
@@ -55,15 +52,15 @@
         <div class="row">
             <div class="card" style="width: 100%">
                 <div class="card-header">
-                    Кандидаты
+                    Candidates
                 </div>
                 <div class="card-body">
                     <table class="table">
                         <thead>
                         <tr>
-                            <th scope="col">Имя Фамилия</th>
-                            <th scope="col">Добавить фото/Удалить кандидата</th>
-                            <th scope="col">Фото</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Add photo/Delete candidate</th>
+                            <th scope="col">Photo</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -77,10 +74,10 @@
                                 </td>
                                 <td>
                                     <a href='<c:url value="/uploadphoto.jsp?id=${candidate.id}"/>'>
-                                        <button type="submit" class="btn btn-success">Добавить фото</button>
+                                        <button type="submit" class="btn btn-success">Add photo</button>
                                     </a>
                                     <a href='<c:url value="/deletecandidate?id=${candidate.id}"/>'>
-                                        <button type="submit" class="btn btn-danger">Удалить</button>
+                                        <button type="submit" class="btn btn-danger">Delete</button>
                                     </a>
                                 </td>
                                 <td>

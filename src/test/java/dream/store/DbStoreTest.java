@@ -32,7 +32,7 @@ public class DbStoreTest {
     @Test
     public void whenCreateCandidate() {
         Store store = DbStore.instOf();
-        Candidate candidate = new Candidate(0, "Junior");
+        Candidate candidate = new Candidate(0, "Junior", 2);
         store.save(candidate);
         Candidate candidate1nDb = store.findCandidateById(candidate.getId());
         Assert.assertEquals(candidate1nDb.getName(), candidate.getName());
@@ -52,8 +52,8 @@ public class DbStoreTest {
     @Test
     public void whenUpdateCandidate() {
         Store store = DbStore.instOf();
-        Candidate candidate = new Candidate(0, "Junior");
-        Candidate updatedCandidate = new Candidate(candidate.getId(), "Updated candidate");
+        Candidate candidate = new Candidate(0, "Junior", 1);
+        Candidate updatedCandidate = new Candidate(candidate.getId(), "Updated candidate", candidate.getCityId());
         store.save(candidate);
         store.save(updatedCandidate);
         Candidate candidateInDb = store.findCandidateById(updatedCandidate.getId());
@@ -73,7 +73,7 @@ public class DbStoreTest {
     @Test
     public void whenDeleteCandidate() {
         Store store = DbStore.instOf();
-        Candidate candidate = new Candidate(0, "Junior for delete");
+        Candidate candidate = new Candidate(0, "Junior for delete", 2);
         store.save(candidate);
         Assert.assertEquals(store.findCandidateById(candidate.getId()).getName(), candidate.getName());
         store.deleteCandidate(candidate.getId());
@@ -95,8 +95,8 @@ public class DbStoreTest {
     public void whenFindAllCandidates() {
         Store store = DbStore.instOf();
         store.findAllCandidates().forEach(candidate -> store.deleteCandidate(candidate.getId()));
-        Candidate firstCandidate = new Candidate(0, "Junior");
-        Candidate secondCandidate = new Candidate(0, "Middle");
+        Candidate firstCandidate = new Candidate(0, "Junior", 1);
+        Candidate secondCandidate = new Candidate(0, "Middle", 2);
         store.save(firstCandidate);
         store.save(secondCandidate);
         Assert.assertEquals(store.findAllCandidates(), List.of(firstCandidate, secondCandidate));

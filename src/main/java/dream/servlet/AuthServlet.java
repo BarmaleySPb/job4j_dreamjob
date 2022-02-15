@@ -12,6 +12,7 @@ import java.io.IOException;
 
 
 public class AuthServlet extends HttpServlet {
+
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String email = req.getParameter("email");

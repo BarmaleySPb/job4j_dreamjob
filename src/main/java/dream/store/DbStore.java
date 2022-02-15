@@ -1,5 +1,6 @@
 package dream.store;
 
+import dream.model.City;
 import dream.model.User;
 import dream.utils.GetProperties;
 import org.apache.commons.dbcp2.BasicDataSource;
@@ -49,11 +50,31 @@ public class DbStore implements Store {
     public Collection<Post> findAllPosts() {
         List<Post> posts = new ArrayList<>();
         try (Connection cn = pool.getConnection();
-             PreparedStatement ps =  cn.prepareStatement("SELECT * FROM post")
+             PreparedStatement ps = cn.prepareStatement("SELECT * FROM post")
         ) {
             try (ResultSet it = ps.executeQuery()) {
                 while (it.next()) {
-                    posts.add(new Post(it.getInt("id"), it.getString("name")));
+                    posts.add(new Post(it.getInt("id"), it.getString("name"),
+                            it.getString("description")));
+                }
+            }
+        } catch (Exception e) {
+            LOG.error("Connection to DB not established", e);
+        }
+        return posts;
+    }
+
+    public Collection<Post> findAllPostsToday() {
+        List<Post> posts = new ArrayList<>();
+        try (Connection cn = pool.getConnection();
+             PreparedStatement ps = cn.prepareStatement("SELECT * FROM post "
+                     + "where created between (current_timestamp - interval '24 hour') "
+                     + "and current_timestamp")
+        ) {
+            try (ResultSet it = ps.executeQuery()) {
+                while (it.next()) {
+                    posts.add(new Post(it.getInt("id"), it.getString("name"),
+                            it.getString("description")));
                 }
             }
         } catch (Exception e) {
@@ -65,17 +86,53 @@ public class DbStore implements Store {
     public Collection<Candidate> findAllCandidates() {
         List<Candidate> candidates = new ArrayList<>();
         try (Connection cn = pool.getConnection();
-             PreparedStatement ps =  cn.prepareStatement("SELECT * FROM candidate")
+             PreparedStatement ps = cn.prepareStatement("SELECT * FROM candidate")
         ) {
             try (ResultSet it = ps.executeQuery()) {
                 while (it.next()) {
-                    candidates.add(new Candidate(it.getInt("id"), it.getString("name")));
+                    candidates.add(new Candidate(it.getInt("id"), it.getString("name"),
+                            it.getInt("cityId")));
                 }
             }
         } catch (Exception e) {
             LOG.error("Connection to DB not established", e);
         }
         return candidates;
+    }
+
+    public Collection<Candidate> findAllCandidatesToday() {
+        List<Candidate> candidates = new ArrayList<>();
+        try (Connection cn = pool.getConnection();
+             PreparedStatement ps = cn.prepareStatement("SELECT * FROM candidate "
+                     + "where created between (current_timestamp - interval '24 hour') "
+                     + "and current_timestamp")
+        ) {
+            try (ResultSet it = ps.executeQuery()) {
+                while (it.next()) {
+                    candidates.add(new Candidate(it.getInt("id"), it.getString("name"),
+                            it.getInt("cityId")));
+                }
+            }
+        } catch (Exception e) {
+            LOG.error("Connection to DB not established", e);
+        }
+        return candidates;
+    }
+
+    public Collection<City> findAllCities() {
+        List<City> cityList = new ArrayList<>();
+        try (Connection cn = pool.getConnection();
+             PreparedStatement ps = cn.prepareStatement("SELECT * FROM city")
+        ) {
+            try (ResultSet it = ps.executeQuery()) {
+                while (it.next()) {
+                    cityList.add(new City(it.getInt("id"), it.getString("name")));
+                }
+            }
+        } catch (Exception e) {
+            LOG.error("Connection to DB not established", e);
+        }
+        return cityList;
     }
 
     public void save(Post post) {
@@ -125,10 +182,13 @@ public class DbStore implements Store {
 
     private Post create(Post post) {
         try (Connection cn = pool.getConnection();
-             PreparedStatement ps =  cn.prepareStatement("INSERT INTO post(name) VALUES (?)",
+             PreparedStatement ps = cn.prepareStatement(
+                     "INSERT INTO post(name, description, created) VALUES (?,?,?)",
                      PreparedStatement.RETURN_GENERATED_KEYS)
         ) {
             ps.setString(1, post.getName());
+            ps.setString(2, post.getDescription());
+            ps.setTimestamp(3, post.getCreated());
             ps.execute();
             try (ResultSet id = ps.getGeneratedKeys()) {
                 if (id.next()) {
@@ -143,10 +203,13 @@ public class DbStore implements Store {
 
     private Candidate create(Candidate candidate) {
         try (Connection cn = pool.getConnection();
-             PreparedStatement ps =  cn.prepareStatement("INSERT INTO candidate(name) VALUES (?)",
+             PreparedStatement ps = cn.prepareStatement(
+                     "INSERT INTO candidate(name, cityId, created) VALUES (?,?,?)",
                      PreparedStatement.RETURN_GENERATED_KEYS)
         ) {
             ps.setString(1, candidate.getName());
+            ps.setInt(2, candidate.getCityId());
+            ps.setTimestamp(3, candidate.getCreated());
             ps.execute();
             try (ResultSet id = ps.getGeneratedKeys()) {
                 if (id.next()) {
@@ -176,10 +239,12 @@ public class DbStore implements Store {
     private void update(Candidate candidate) {
         try (Connection cn = pool.getConnection();
              PreparedStatement ps = cn.prepareStatement(
-                     "UPDATE candidate SET name = (?) WHERE id = (?)")
+                     "UPDATE candidate SET name = (?,?,?) WHERE id = (?)")
         ) {
             ps.setString(1, candidate.getName());
-            ps.setInt(2, candidate.getId());
+            ps.setInt(2, candidate.getCityId());
+            ps.setTimestamp(3, candidate.getCreated());
+            ps.setInt(4, candidate.getId());
             ps.executeUpdate();
         } catch (Exception e) {
             LOG.error("Connection to DB not established", e);
@@ -203,7 +268,7 @@ public class DbStore implements Store {
 
     public Post findPostById(int id) {
         try (Connection cn = pool.getConnection();
-             PreparedStatement ps =  cn.prepareStatement("SELECT * FROM post WHERE id = (?)")
+             PreparedStatement ps = cn.prepareStatement("SELECT * FROM post WHERE id = (?)")
         ) {
             ps.setInt(1, id);
             try (ResultSet it = ps.executeQuery()) {
@@ -220,7 +285,7 @@ public class DbStore implements Store {
 
     public Post findPostByName(String name) {
         try (Connection cn = pool.getConnection();
-             PreparedStatement ps =  cn.prepareStatement("SELECT * FROM post WHERE name = (?)")
+             PreparedStatement ps = cn.prepareStatement("SELECT * FROM post WHERE name = (?)")
         ) {
             ps.setString(1, name);
             try (ResultSet it = ps.executeQuery()) {
@@ -237,7 +302,7 @@ public class DbStore implements Store {
 
     public Candidate findCandidateById(int id) {
         try (Connection cn = pool.getConnection();
-             PreparedStatement ps =  cn.prepareStatement("SELECT * FROM candidate WHERE id = (?)")
+             PreparedStatement ps = cn.prepareStatement("SELECT * FROM candidate WHERE id = (?)")
         ) {
             ps.setInt(1, id);
             try (ResultSet it = ps.executeQuery()) {
@@ -253,7 +318,7 @@ public class DbStore implements Store {
 
     public Candidate findCandidateByName(String name) {
         try (Connection cn = pool.getConnection();
-             PreparedStatement ps =  cn.prepareStatement("SELECT * FROM candidate WHERE name = (?)")
+             PreparedStatement ps = cn.prepareStatement("SELECT * FROM candidate WHERE name = (?)")
         ) {
             ps.setString(1, name);
             try (ResultSet it = ps.executeQuery()) {
@@ -269,7 +334,7 @@ public class DbStore implements Store {
 
     public User findUserById(int id) {
         try (Connection cn = pool.getConnection();
-             PreparedStatement ps =  cn.prepareStatement("SELECT * FROM users WHERE id = (?)")
+             PreparedStatement ps = cn.prepareStatement("SELECT * FROM users WHERE id = (?)")
         ) {
             ps.setInt(1, id);
             try (ResultSet it = ps.executeQuery()) {
@@ -286,7 +351,7 @@ public class DbStore implements Store {
 
     public User findUserByEmail(String email) {
         try (Connection cn = pool.getConnection();
-             PreparedStatement ps =  cn.prepareStatement("SELECT * FROM users WHERE email = (?)")
+             PreparedStatement ps = cn.prepareStatement("SELECT * FROM users WHERE email = (?)")
         ) {
             ps.setString(1, email);
             try (ResultSet it = ps.executeQuery()) {
